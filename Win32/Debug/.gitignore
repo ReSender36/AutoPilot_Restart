@@ -1,0 +1,14 @@
+*.exe
+*.obj
+*.#00
+*.#01
+*.ilc
+*.ild
+*.ilf
+*.ils
+*.pch
+*.pdi
+*.map
+*.tds
+*.~*~
+*.dll
