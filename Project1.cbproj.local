@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.102,D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\runCalc.cpp=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.831,=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.102,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.h=D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\runCalc.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.102,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.cpp=D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\runCalc.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.888,=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.102,D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\runCalc.dfm=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.102,D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\runCalc.h=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.539,D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\Project1PCH1.h=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.580,D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\Project1.cbproj=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.539,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h=D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.580,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1.cbproj=D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\Project1.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.102,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\docs\Programming\RAD Studio XE7\C++\Praxis\runCalc\runCalc.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.831,=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
   </Transactions>
 </BorlandProject>

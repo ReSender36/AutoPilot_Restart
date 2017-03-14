@@ -1,12 +1,13 @@
 //---------------------------------------------------------------------------
 
-#ifndef runCalcH
-#define runCalcH
+#ifndef MainUnitH
+#define MainUnitH
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
+#include <Vcl.ExtCtrls.hpp>
 #include <Data.DB.hpp>
 #include <FireDAC.Comp.Client.hpp>
 #include <FireDAC.Comp.DataSet.hpp>
@@ -16,8 +17,9 @@
 #include <FireDAC.DatS.hpp>
 #include <FireDAC.Phys.hpp>
 #include <FireDAC.Phys.Intf.hpp>
-#include <FireDAC.Phys.MySQL.hpp>
-#include <FireDAC.Phys.MySQLDef.hpp>
+#include <FireDAC.Phys.MSSQL.hpp>
+#include <FireDAC.Phys.MSSQLDef.hpp>
+#include <FireDAC.Phys.ODBCBase.hpp>
 #include <FireDAC.Stan.Async.hpp>
 #include <FireDAC.Stan.Def.hpp>
 #include <FireDAC.Stan.Error.hpp>
@@ -31,13 +33,15 @@
 class TForm1 : public TForm
 {
 __published:	// IDE-managed Components
-	TButton *Button1;
 	TEdit *Edit1;
+	TButton *Button1;
+	TTimer *TimerToRestart;
+	TFDPhysMSSQLDriverLink *FDPhysMSSQLDriverLink1;
+	TFDConnection *FDConnection1;
 	TFDGUIxWaitCursor *FDGUIxWaitCursor1;
-	TFDPhysMySQLDriverLink *FDPhysMySQLDriverLink1;
-	TFDConnection *fdc;
-	TFDQuery *FDQuery1;
 	TFDCommand *FDCommand1;
+	TFDQuery *FDQuery1;
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
