@@ -43,6 +43,7 @@ __published:	// IDE-managed Components
 	TFDQuery *FDQuery1;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall TimerToRestartTimer(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);

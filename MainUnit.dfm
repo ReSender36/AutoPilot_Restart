@@ -32,6 +32,9 @@ object Form1: TForm1
     OnClick = Button1Click
   end
   object TimerToRestart: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = TimerToRestartTimer
     Left = 32
     Top = 136
   end
@@ -43,7 +46,11 @@ object Form1: TForm1
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=MS_SQL')
+      'DriverID=MS_SQL'
+      'Address=192.168.91.128'
+      'User_Name=sa'
+      'Password=TykadKme'
+      'Server=192.168.91.128')
     LoginPrompt = False
     Left = 208
     Top = 136
