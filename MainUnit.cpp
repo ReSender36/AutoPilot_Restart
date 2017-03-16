@@ -4,31 +4,51 @@
 #include <windows.h>
 #include <stdio.h>
 #include <shellapi.h>
+#include <inifiles.hpp>
 #pragma hdrstop
 
 #include "MainUnit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TForm1 *Form1;
+TfrmAutoPilotRestart *frmAutoPilotRestart;
 String PARAM = "" ;
+String DB_WMS = "SKLAD1" ;
+String DB_WMS_TABLE_CONST = "_1SCONST" ;
+String DB_WMS_CONST_AUTOPILOT_STOP = "3358" ;
+String DB_MONITOR = "DB1S_monitor" ;
+String DB_MON_OPTABLE = "OPTIONS" ;
+String DB_MON_LOGTABLE = "LOGS" ;
 //---------------------------------------------------------------------------
-__fastcall TForm1::TForm1(TComponent* Owner)
+__fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
 	: TForm(Owner)
 {
 }
 //---------------------------------------------------------------------------
 bool db_connect()
 {
+	TIniFile *ini ;
+
+	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
+	String Address = ini->ReadString("DB_Param", "Address", 1) ;
+	String Server = ini->ReadString("DB_Param", "Server", 1) ;
+	String UserName = ini->ReadString("DB_Param", "UserName", 1) ;
+	String Password = ini->ReadString("DB_Param", "Password", 1) ;
+	ini->Free() ;
+
 	try{
-		if (!Form1->FDConnection1->Connected){
-			Form1->FDConnection1->Connected = true ;
-				if (Form1->FDConnection1->Connected)
-					return true ;
+		if (!frmAutoPilotRestart->FDConnection1->Connected){
+			frmAutoPilotRestart->FDConnection1->Params->Add("Address=" + Address) ;
+			frmAutoPilotRestart->FDConnection1->Params->Add("Server=" + Server) ;
+			frmAutoPilotRestart->FDConnection1->Params->Add("UserName=" + UserName) ;
+			frmAutoPilotRestart->FDConnection1->Params->Add("Password=" + Password) ;
+			frmAutoPilotRestart->FDConnection1->Connected = true ;
+			if (frmAutoPilotRestart->FDConnection1->Connected)
+				return true ;
 		}
 	}
 	catch(...){
-		int q_conn = Application->MessageBox(String("БД не найдена по указанному пути. Отредактируйте файл INI").w_str(),String("Проблема").w_str(),MB_YESNO + MB_ICONQUESTION) ;
+		int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + GetLastError()).w_str(),String("Проблема").w_str(),MB_OK) ;
 		switch(q_conn){
 			case IDYES:
 				break ;
@@ -39,7 +59,7 @@ bool db_connect()
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::FormCreate(TObject *Sender)
+void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 {
    LPWSTR *szArglist;
    int nArgs;
@@ -61,44 +81,92 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 		PARAM = szArglist[i] ;
 	}
 
+	Application->ShowMainForm = false ;
 
 	if("-r" == PARAM)
-
-
 
 // Free memory allocated for CommandLineToArgvW arguments.
    LocalFree(szArglist);
    return;
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::Button1Click(TObject *Sender)
+void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 {
-	String val = "" ;
+
 	if("-r" == PARAM){
 		if(db_connect()){
-			FDQuery1->SQL->Text = String("select value from DB_1SMonitor.dbo.options where option_name = 'AutopilotRestart'") ;
-			FDQuery1->Active = true ;
+			FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
+			FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = 'AutopilotRestart' ;") ;
+			try{
+				FDCommand1->Execute() ;
+			}catch(...){
 
-			FDQuery1->First() ;
-			while(!FDQuery1->Eof){
-				val = FDQuery1->FieldByName("value")->AsString ;
-				FDQuery1->Next() ;
 			}
 		}
+		TimerToRestart->Enabled = true ;
+	}else{
+		if("-d" == PARAM){
+			if(db_connect()){
+				FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
+				try{
+					FDCommand1->Execute() ;
+				}catch(...){
+
+				}
+			}
+            Application->Terminate() ;
+		}
 	}
-	Edit1->Text = val ;
 
-	FDCommand1->CommandText->Add("update DB_1SMonitor.dbo.options set value = 'No' where option_name = 'AutopilotRestart' ;") ;
-	FDCommand1->Execute() ;
+//	FDCommand1->CommandText->Add("update DB_1SMonitor.dbo.options set value = 'No' where option_name = 'AutopilotRestart' ;") ;
+//	FDCommand1->Execute() ;
 
-	TimerToRestart->Enabled = true ;
+
 
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::TimerToRestartTimer(TObject *Sender)
+void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 {
-		Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
-		Application->Terminate() ;
+	String val = "" ;
+	FDQuery1->SQL->Text = String("select value from " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " where option_name = 'AutopilotRestart'") ;
+	FDQuery1->Active = true ;
+	FDQuery1->First() ;
+	while(!FDQuery1->Eof){
+		val = FDQuery1->FieldByName("value")->AsString ;
+		FDQuery1->Next() ;
+	}
+	if("Y" == val){
+	// стартуем
+		STARTUPINFO StartInfo = { sizeof(TStartupInfo) } ;
+		PROCESS_INFORMATION ProcInfo ;
+		LPCTSTR s ;
+		StartInfo.cb = sizeof(StartInfo) ;
+		StartInfo.dwFlags = STARTF_USESHOWWINDOW ;
+		StartInfo.wShowWindow = SW_SHOWNORMAL ;
+		String strProg = "Calc.exe" ;
+		/*
+		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
+			CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
+//		ShowMessage("Ошибка: " + SysErrorMessage(GetLastError())) ;
+		}
+		else{
+			if(WaitForSingleObject(ProcInfo.hProcess,10000) == WAIT_TIMEOUT) {}
+//				ShowMessage("Процесс пока идет") ;
+//			CloseHandle(ProcInfo.hProcess) ;
+		}
+		*/
+        CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
+			CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo) ;
+	}
+	Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
+	Application->Terminate() ;
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TfrmAutoPilotRestart::TrayIcon1DblClick(TObject *Sender)
+{
+	Application->ShowMainForm = true ;
+}
+//---------------------------------------------------------------------------
+
 

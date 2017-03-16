@@ -30,7 +30,7 @@
 #include <FireDAC.UI.Intf.hpp>
 #include <FireDAC.VCLUI.Wait.hpp>
 //---------------------------------------------------------------------------
-class TForm1 : public TForm
+class TfrmAutoPilotRestart : public TForm
 {
 __published:	// IDE-managed Components
 	TEdit *Edit1;
@@ -41,14 +41,16 @@ __published:	// IDE-managed Components
 	TFDGUIxWaitCursor *FDGUIxWaitCursor1;
 	TFDCommand *FDCommand1;
 	TFDQuery *FDQuery1;
+	TTrayIcon *TrayIcon1;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall TimerToRestartTimer(TObject *Sender);
+	void __fastcall TrayIcon1DblClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
-	__fastcall TForm1(TComponent* Owner);
+	__fastcall TfrmAutoPilotRestart(TComponent* Owner);
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TForm1 *Form1;
+extern PACKAGE TfrmAutoPilotRestart *frmAutoPilotRestart;
 //---------------------------------------------------------------------------
 #endif
