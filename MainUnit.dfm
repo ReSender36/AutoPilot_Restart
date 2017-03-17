@@ -31,6 +31,15 @@ object frmAutoPilotRestart: TfrmAutoPilotRestart
     TabOrder = 1
     OnClick = Button1Click
   end
+  object Button2: TButton
+    Left = 296
+    Top = 112
+    Width = 75
+    Height = 25
+    Caption = 'Button2'
+    TabOrder = 2
+    OnClick = Button2Click
+  end
   object TimerToRestart: TTimer
     Enabled = False
     Interval = 3000
@@ -92,9 +101,24 @@ object frmAutoPilotRestart: TfrmAutoPilotRestart
       FFFFF003FFFFE000FFFFC0007FFFC0003FFFC0001FFFE0000FFFF00007FFF800
       03FFFC0001FFFE0001FFFF0001FFFF8003FFFFFFFFFFFFFE0003FFFC0001FFFC
       0000FFFC0000FFFE0000FFFF0001FFFFFE1FFFFFFF0FFFFFFF8FFFFFFFFF}
-    Visible = True
+    PopupMenu = PopupMenu1
     OnDblClick = TrayIcon1DblClick
     Left = 384
     Top = 32
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 120
+    Top = 136
+    object N1: TMenuItem
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100
+      OnClick = N1Click
+    end
+    object N2: TMenuItem
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
+    end
+    object N3: TMenuItem
+      Caption = #1055#1088#1077#1088#1074#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1079#1072#1087#1091#1089#1082#1072
+      OnClick = N3Click
+    end
   end
 end

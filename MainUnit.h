@@ -29,6 +29,7 @@
 #include <FireDAC.Stan.Pool.hpp>
 #include <FireDAC.UI.Intf.hpp>
 #include <FireDAC.VCLUI.Wait.hpp>
+#include <Vcl.Menus.hpp>
 //---------------------------------------------------------------------------
 class TfrmAutoPilotRestart : public TForm
 {
@@ -42,10 +43,18 @@ __published:	// IDE-managed Components
 	TFDCommand *FDCommand1;
 	TFDQuery *FDQuery1;
 	TTrayIcon *TrayIcon1;
+	TPopupMenu *PopupMenu1;
+	TMenuItem *N1;
+	TMenuItem *N2;
+	TMenuItem *N3;
+	TButton *Button2;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall TimerToRestartTimer(TObject *Sender);
 	void __fastcall TrayIcon1DblClick(TObject *Sender);
+	void __fastcall N1Click(TObject *Sender);
+	void __fastcall N3Click(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmAutoPilotRestart(TComponent* Owner);

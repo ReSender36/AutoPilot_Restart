@@ -12,13 +12,17 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TfrmAutoPilotRestart *frmAutoPilotRestart;
-String PARAM = "" ;
-String DB_WMS = "SKLAD1" ;
-String DB_WMS_TABLE_CONST = "_1SCONST" ;
-String DB_WMS_CONST_AUTOPILOT_STOP = "3358" ;
-String DB_MONITOR = "DB1S_monitor" ;
-String DB_MON_OPTABLE = "OPTIONS" ;
-String DB_MON_LOGTABLE = "LOGS" ;
+String static PARAM = "" ;
+String static DB_WMS = "SKLAD1" ;
+String static DB_WMS_TABLE_CONST = "_1SCONST" ;
+String static DB_WMS_CONST_AUTOPILOT_STOP = "3358" ;
+String static DB_MONITOR = "DB1S_monitor" ;
+String static DB_MON_OPTABLE = "OPTIONS" ;
+String static DB_MON_OPTION_AUTORESTART = "AutopilotRestart" ;
+String static DB_MON_OPTION_AUTOPILOTSHORTCUT = "Str_AutopilotShortcut" ;
+String static DB_MON_OPTION_SERVICESHORTCUT = "Str_ServiceShortcut" ;
+String static DB_MON_OPTION_TIMERRESTARTDELAY = "TimerRestartDelay" ;
+String static DB_MON_LOGTABLE = "LOGS" ;
 //---------------------------------------------------------------------------
 __fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
 	: TForm(Owner)
@@ -48,7 +52,7 @@ bool db_connect()
 		}
 	}
 	catch(...){
-		int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + GetLastError()).w_str(),String("Проблема").w_str(),MB_OK) ;
+		int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
 		switch(q_conn){
 			case IDYES:
 				break ;
@@ -81,13 +85,26 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 		PARAM = szArglist[i] ;
 	}
 
-	Application->ShowMainForm = false ;
-
+//	Application->ShowMainForm = false ;
+//	frmAutoPilotRestart->Visible = false ;
 	if("-r" == PARAM)
 
 // Free memory allocated for CommandLineToArgvW arguments.
    LocalFree(szArglist);
    return;
+}
+//---------------------------------------------------------------------------
+String getOptionValue(String db, String table, String option)
+{
+	String strResult = "" ;
+	frmAutoPilotRestart->FDQuery1->SQL->Text = String("select value from " + db + ".dbo." + table + " where option_name = '" + option + "'") ;
+	frmAutoPilotRestart->FDQuery1->Active = true ;
+	frmAutoPilotRestart->FDQuery1->First() ;
+	while(!frmAutoPilotRestart->FDQuery1->Eof){
+		strResult = frmAutoPilotRestart->FDQuery1->FieldByName("value")->AsString ;
+		frmAutoPilotRestart->FDQuery1->Next() ;
+	}
+	return strResult ;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
@@ -96,13 +113,15 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 	if("-r" == PARAM){
 		if(db_connect()){
 			FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
-			FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = 'AutopilotRestart' ;") ;
+			FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
 			try{
 				FDCommand1->Execute() ;
 			}catch(...){
 
 			}
 		}
+		int iInterval = StrToInt(getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY)) ;
+		TimerToRestart->Interval = iInterval ;
 		TimerToRestart->Enabled = true ;
 	}else{
 		if("-d" == PARAM){
@@ -117,56 +136,84 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
             Application->Terminate() ;
 		}
 	}
-
-//	FDCommand1->CommandText->Add("update DB_1SMonitor.dbo.options set value = 'No' where option_name = 'AutopilotRestart' ;") ;
-//	FDCommand1->Execute() ;
-
-
-
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 {
-	String val = "" ;
-	FDQuery1->SQL->Text = String("select value from " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " where option_name = 'AutopilotRestart'") ;
-	FDQuery1->Active = true ;
-	FDQuery1->First() ;
-	while(!FDQuery1->Eof){
-		val = FDQuery1->FieldByName("value")->AsString ;
-		FDQuery1->Next() ;
-	}
-	if("Y" == val){
-	// стартуем
+	String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART) ;
+	String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTOPILOTSHORTCUT) ;
+	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT) ;
+
+	if("Y" == strVal){
+	// снимаем флаг, что происходит автоматичсекий рестарт. Защита от рестарта с иконки на рабочем столе
+		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
+		try{
+			FDCommand1->Execute() ;
+		}catch(...){
+		}
+	// запускаем
 		STARTUPINFO StartInfo = { sizeof(TStartupInfo) } ;
 		PROCESS_INFORMATION ProcInfo ;
 		LPCTSTR s ;
 		StartInfo.cb = sizeof(StartInfo) ;
 		StartInfo.dwFlags = STARTF_USESHOWWINDOW ;
 		StartInfo.wShowWindow = SW_SHOWNORMAL ;
-		String strProg = "Calc.exe" ;
-		/*
-		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
-			CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
-//		ShowMessage("Ошибка: " + SysErrorMessage(GetLastError())) ;
+		String strProg = strAutopilotShortcut ;
+
+		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
+			ShowMessage("Ошибка запуска автопилота: " + SysErrorMessage(GetLastError())) ;
 		}
-		else{
-			if(WaitForSingleObject(ProcInfo.hProcess,10000) == WAIT_TIMEOUT) {}
+//		else{
+//			if(WaitForSingleObject(ProcInfo.hProcess,10000) == WAIT_TIMEOUT) {}
 //				ShowMessage("Процесс пока идет") ;
 //			CloseHandle(ProcInfo.hProcess) ;
+//		}
+		strProg = strServiceShortcut ;
+		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
+			ShowMessage("Ошибка запуска сервиса: " + SysErrorMessage(GetLastError())) ;
 		}
-		*/
-        CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
-			CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo) ;
+//        CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
+//			CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo) ;
 	}
-	Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
-	Application->Terminate() ;
+//	Edit1->Text = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY) ;
+//	Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
+//	Application->Terminate() ;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfrmAutoPilotRestart::TrayIcon1DblClick(TObject *Sender)
 {
 	Application->ShowMainForm = true ;
+	frmAutoPilotRestart->Visible = true ;
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TfrmAutoPilotRestart::N1Click(TObject *Sender)
+{
+	Application->ShowMainForm = true ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmAutoPilotRestart::N3Click(TObject *Sender)
+{
+// снимаем флаг, что происходит автоматический рестарт. Защита от рестарта с иконки на рабочем столе
+	if(db_connect()){
+		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
+		try{
+			FDCommand1->Execute() ;
+		}catch(...){
+		}
+	}
+
+	Application->Terminate() ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmAutoPilotRestart::Button2Click(TObject *Sender)
+{
+	TrayIcon1->Visible = true ;
+	frmAutoPilotRestart->Hide() ;
+}
+//---------------------------------------------------------------------------
 

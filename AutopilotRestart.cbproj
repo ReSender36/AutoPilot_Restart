@@ -102,10 +102,10 @@
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\debug\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <LinkPackageStatics>rtl.lib;vcl.lib;dbrtl.lib;FireDACCommon.lib;xmlrtl.lib;FireDACODBCDriver.lib;FireDACCommonDriver.lib;FireDACMSSQLDriver.lib;vclFireDAC.lib;FireDAC.lib;FireDACSqliteDriver.lib;vcldb.lib;vclx.lib</LinkPackageStatics>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Debugger_RunParams>-r</Debugger_RunParams>
-        <LinkPackageImports>rtl.bpi;vcl.bpi;dbrtl.bpi;FireDACCommon.bpi;xmlrtl.bpi;FireDACODBCDriver.bpi;FireDACCommonDriver.bpi;FireDACMSSQLDriver.bpi;vclFireDAC.bpi;FireDAC.bpi;FireDACSqliteDriver.bpi;vcldb.bpi;vclx.bpi</LinkPackageImports>
         <ILINK_LibraryPath>$(BDS)\lib\win32\release\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -163,13 +163,156 @@
                 </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
             <Deployment>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDAC210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDAC210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommon210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclx210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclx210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDAC210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDAC210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\xmlrtl210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>xmlrtl210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcldb210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcldb210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcl210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcl210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcl210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcl210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32160.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclFireDAC210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclFireDAC210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\rtl210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>rtl210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclFireDAC210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclFireDAC210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin64\borlndmm.dll" Class="DependencyModule">
                     <Platform Name="Win64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64160mt.dll" Class="DependencyModule">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommonDriver210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dbrtl210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcl210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcl210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\Win32\Debug\AutopilotRestart.tds" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteName>AutopilotRestart.tds</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dbrtl210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACODBCDriver210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclx210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclx210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\rtl210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcl210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDAC210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDAC210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgstl.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcldb210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcldb210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\xmlrtl210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>xmlrtl210.de</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -183,20 +326,104 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\Project1.tds" Configuration="Debug" Class="DebugSymbols"/>
-                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgstl.dylib" Class="DependencyModule">
-                    <Platform Name="OSX32">
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACMSSQLDriver210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommon210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDACCommon210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcldb210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcldb210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommon210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDACCommon210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64160mt.dll" Class="DependencyModule">
+                    <Platform Name="Win64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\xmlrtl210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\rtl210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>rtl210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\Win32\Debug\Project1.tds" Configuration="Debug" Class="DebugSymbols"/>
                 <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin\borlndmm.dll" Class="DependencyModule">
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\AutopilotRestart.tds" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="$(BDS)\Redist\Win32\rtl210.de" Configuration="Debug" Class="DependencyPackageResource">
                     <Platform Name="Win32">
-                        <RemoteName>AutopilotRestart.tds</RemoteName>
+                        <RemoteName>rtl210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclFireDAC210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDAC210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACSqliteDriver210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclFireDAC210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclFireDAC210.fr</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcldb210.bpl" Configuration="Debug" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\xmlrtl210.ja" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>xmlrtl210.ja</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclx210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclx210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommon210.de" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDACCommon210.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl210.fr" Configuration="Debug" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dbrtl210.fr</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -206,7 +433,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32160.dll" Class="DependencyModule">
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclx210.bpl" Configuration="Debug" Class="DependencyPackage">
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
