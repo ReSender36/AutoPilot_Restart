@@ -34,6 +34,10 @@ bool db_connect()
 	TIniFile *ini ;
 
 	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
+ /*	if ("" == ini){
+		Application->MessageBoxW(String("Не найден файл с настройками в каталоге с программой " + Application->ExeName).w_str(),,String("Проблема").w_str(),MB_OK) ;
+	}
+ */
 	String Address = ini->ReadString("DB_Param", "Address", 1) ;
 	String Server = ini->ReadString("DB_Param", "Server", 1) ;
 	String UserName = ini->ReadString("DB_Param", "UserName", 1) ;
@@ -145,7 +149,7 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT) ;
 
 	if("Y" == strVal){
-	// снимаем флаг, что происходит автоматичсекий рестарт. Защита от рестарта с иконки на рабочем столе
+	// снимаем флаг, что происходит автоматический рестарт. Защита от рестарта с иконки на рабочем столе
 		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
 		try{
 			FDCommand1->Execute() ;
@@ -158,7 +162,7 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 		StartInfo.cb = sizeof(StartInfo) ;
 		StartInfo.dwFlags = STARTF_USESHOWWINDOW ;
 		StartInfo.wShowWindow = SW_SHOWNORMAL ;
-		String strProg = strAutopilotShortcut ;
+		String strProg = strAutopilotShortcut ; //   "calc.exe" ;
 
 		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
 			ShowMessage("Ошибка запуска автопилота: " + SysErrorMessage(GetLastError())) ;
@@ -168,7 +172,8 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 //				ShowMessage("Процесс пока идет") ;
 //			CloseHandle(ProcInfo.hProcess) ;
 //		}
-		strProg = strServiceShortcut ;
+		Sleep(10000) ;
+		strProg = strServiceShortcut ;// "notepad.exe" ;
 		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
 			ShowMessage("Ошибка запуска сервиса: " + SysErrorMessage(GetLastError())) ;
 		}
@@ -191,7 +196,9 @@ void __fastcall TfrmAutoPilotRestart::TrayIcon1DblClick(TObject *Sender)
 
 void __fastcall TfrmAutoPilotRestart::N1Click(TObject *Sender)
 {
-	Application->ShowMainForm = true ;
+//	Application->ShowMainForm = true ;
+	frmAutoPilotRestart->Show() ;
+	TrayIcon1->Visible = false ;
 }
 //---------------------------------------------------------------------------
 
@@ -213,7 +220,7 @@ void __fastcall TfrmAutoPilotRestart::N3Click(TObject *Sender)
 void __fastcall TfrmAutoPilotRestart::Button2Click(TObject *Sender)
 {
 	TrayIcon1->Visible = true ;
-	frmAutoPilotRestart->Hide() ;
+ 	frmAutoPilotRestart->Hide() ;
 }
 //---------------------------------------------------------------------------
 

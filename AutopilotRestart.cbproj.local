@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.635,D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\MainUnit.cpp=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.359,D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\AutopilotRestart.cbproj=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.183,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h=D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\AgmAutopilot.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.635,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.cpp=D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\MainUnit.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.095,=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.635,D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\MainUnit.dfm=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.635,D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\MainUnit.h=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.048,=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.183,D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\AgmAutopilot.h=C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.359,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Project1.cbproj=D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\AutopilotRestart.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.635,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\MainUnit.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.635,C:\Users\mdi\Documents\Embarcadero\Studio\Projects\Unit1.h=D:\docs\Programming\RAD Studio XE7\C++\Development\AgmAutopilot\MainUnit.h</Transaction>
   </Transactions>
 </BorlandProject>
