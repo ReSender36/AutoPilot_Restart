@@ -5,6 +5,7 @@
 #include <tchar.h>
 //---------------------------------------------------------------------------
 USEFORM("MainUnit.cpp", frmAutoPilotRestart);
+USEFORM("OptionsUnit.cpp", frmLauncherOptions);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

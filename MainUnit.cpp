@@ -8,6 +8,7 @@
 #pragma hdrstop
 
 #include "MainUnit.h"
+#include "OptionsUnit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -32,7 +33,6 @@ __fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
 bool db_connect()
 {
 	TIniFile *ini ;
-
 	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
  /*	if ("" == ini){
 		Application->MessageBoxW(String("Не найден файл с настройками в каталоге с программой " + Application->ExeName).w_str(),,String("Проблема").w_str(),MB_OK) ;
@@ -91,7 +91,10 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 
 //	Application->ShowMainForm = false ;
 //	frmAutoPilotRestart->Visible = false ;
-	if("-r" == PARAM)
+	if("-o" == PARAM){
+	   Application->CreateForm(__classid(TfrmLauncherOptions), &frmLauncherOptions) ;
+	   frmLauncherOptions->Visible = true ;
+	}
 
 // Free memory allocated for CommandLineToArgvW arguments.
    LocalFree(szArglist);
