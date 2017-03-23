@@ -31,6 +31,7 @@ __published:	// IDE-managed Components
 	TBitBtn *BitBtn1;
 	TBitBtn *BitBtn2;
 	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall BitBtn2Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmLauncherOptions(TComponent* Owner);

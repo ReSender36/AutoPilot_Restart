@@ -30,43 +30,6 @@ __fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
-bool db_connect()
-{
-	TIniFile *ini ;
-	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
- /*	if ("" == ini){
-		Application->MessageBoxW(String("Не найден файл с настройками в каталоге с программой " + Application->ExeName).w_str(),,String("Проблема").w_str(),MB_OK) ;
-	}
- */
-	String Address = ini->ReadString("DB_Param", "Address", 1) ;
-	String Server = ini->ReadString("DB_Param", "Server", 1) ;
-	String UserName = ini->ReadString("DB_Param", "UserName", 1) ;
-	String Password = ini->ReadString("DB_Param", "Password", 1) ;
-	ini->Free() ;
-
-	try{
-		if (!frmAutoPilotRestart->FDConnection1->Connected){
-			frmAutoPilotRestart->FDConnection1->Params->Add("Address=" + Address) ;
-			frmAutoPilotRestart->FDConnection1->Params->Add("Server=" + Server) ;
-			frmAutoPilotRestart->FDConnection1->Params->Add("UserName=" + UserName) ;
-			frmAutoPilotRestart->FDConnection1->Params->Add("Password=" + Password) ;
-			frmAutoPilotRestart->FDConnection1->Connected = true ;
-			if (frmAutoPilotRestart->FDConnection1->Connected)
-				return true ;
-		}
-	}
-	catch(...){
-		int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
-		switch(q_conn){
-			case IDYES:
-				break ;
-			case IDNO:
-				break ;
-		}
-		return false ;
-	}
-}
-//---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 {
    LPWSTR *szArglist;

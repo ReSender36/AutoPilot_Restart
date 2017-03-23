@@ -150,5 +150,6 @@ object frmLauncherOptions: TfrmLauncherOptions
     Kind = bkCancel
     NumGlyphs = 2
     TabOrder = 3
+    OnClick = BitBtn2Click
   end
 end
