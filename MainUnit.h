@@ -55,6 +55,7 @@ __published:	// IDE-managed Components
 	void __fastcall N1Click(TObject *Sender);
 	void __fastcall N3Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmAutoPilotRestart(TComponent* Owner);
@@ -73,25 +74,39 @@ bool db_connect()
 	String Password = ini->ReadString("DB_Param", "Password", 1) ;
 	ini->Free() ;
 
-	try{
-		if (!FDConnection1->Connected){
-			FDConnection1->Params->Add("Address=" + Address) ;
-			FDConnection1->Params->Add("Server=" + Server) ;
-			FDConnection1->Params->Add("UserName=" + UserName) ;
-			FDConnection1->Params->Add("Password=" + Password) ;
+
+	if (!FDConnection1->Connected){
+		FDConnection1->Params->Add("Address=" + Address) ;
+		FDConnection1->Params->Add("Server=" + Server) ;
+		FDConnection1->Params->Add("UserName=" + UserName) ;
+		FDConnection1->Params->Add("Password=" + Password) ;
+		try{
 			FDConnection1->Connected = true ;
 			if (FDConnection1->Connected)
 				return true ;
 		}
+		catch(...){
+			int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
+			switch(q_conn){
+				case IDYES:
+					break ;
+				case IDNO:
+					break ;
+			}
+			return false ;
+		}
+	}
+}
+//---------------------------------------------------------------------------
+bool db_disconnect()
+{
+	try{
+		if(FDConnection1->Connected){
+			FDConnection1->Connected = false ;
+			return true ;
+		}
 	}
 	catch(...){
-		int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
-		switch(q_conn){
-			case IDYES:
-				break ;
-			case IDNO:
-				break ;
-		}
 		return false ;
 	}
 }

@@ -141,6 +141,7 @@ object frmLauncherOptions: TfrmLauncherOptions
     Kind = bkOK
     NumGlyphs = 2
     TabOrder = 2
+    OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
     Left = 699

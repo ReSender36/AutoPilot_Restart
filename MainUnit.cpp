@@ -13,17 +13,19 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TfrmAutoPilotRestart *frmAutoPilotRestart;
-String static PARAM = "" ;
-String static DB_WMS = "SKLAD1" ;
-String static DB_WMS_TABLE_CONST = "_1SCONST" ;
-String static DB_WMS_CONST_AUTOPILOT_STOP = "3358" ;
-String static DB_MONITOR = "DB1S_monitor" ;
-String static DB_MON_OPTABLE = "OPTIONS" ;
-String static DB_MON_OPTION_AUTORESTART = "AutopilotRestart" ;
-String static DB_MON_OPTION_AUTOPILOTSHORTCUT = "Str_AutopilotShortcut" ;
-String static DB_MON_OPTION_SERVICESHORTCUT = "Str_ServiceShortcut" ;
-String static DB_MON_OPTION_TIMERRESTARTDELAY = "TimerRestartDelay" ;
-String static DB_MON_LOGTABLE = "LOGS" ;
+
+static String PARAM = "" ;
+const String DB_WMS = "SKLAD1" ;
+const String DB_WMS_TABLE_CONST = "_1SCONST" ;
+const String DB_WMS_CONST_AUTOPILOT_STOP = "3358" ;
+const String DB_MONITOR = "DB1S_monitor" ;
+const String DB_MON_OPTABLE = "OPTIONS" ;
+const String DB_MON_OPTION_AUTORESTART = "AutopilotRestart" ;
+const String DB_MON_OPTION_AUTOPILOTSHORTCUT = "Str_AutopilotShortcut" ;
+const String DB_MON_OPTION_SERVICESHORTCUT = "Str_ServiceShortcut" ;
+const String DB_MON_OPTION_TIMERRESTARTDELAY = "TimerRestartDelay" ;
+const String DB_MON_LOGTABLE = "LOGS" ;
+
 //---------------------------------------------------------------------------
 __fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
 	: TForm(Owner)
@@ -138,17 +140,19 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 //				ShowMessage("Процесс пока идет") ;
 //			CloseHandle(ProcInfo.hProcess) ;
 //		}
-		Sleep(10000) ;
-		strProg = strServiceShortcut ;// "notepad.exe" ;
-		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
-			ShowMessage("Ошибка запуска сервиса: " + SysErrorMessage(GetLastError())) ;
-		}
+
+//		Sleep(10000) ;
+//		strProg = strServiceShortcut ;// "notepad.exe" ;
+//		if(!CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo)){
+//			ShowMessage("Ошибка запуска сервиса: " + SysErrorMessage(GetLastError())) ;
+//		}
 //        CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
 //			CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo) ;
 	}
 //	Edit1->Text = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY) ;
 //	Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
-//	Application->Terminate() ;
+	TimerToRestart->Enabled = false ;
+	Application->Terminate() ;
 }
 //---------------------------------------------------------------------------
 
@@ -187,6 +191,12 @@ void __fastcall TfrmAutoPilotRestart::Button2Click(TObject *Sender)
 {
 	TrayIcon1->Visible = true ;
  	frmAutoPilotRestart->Hide() ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmAutoPilotRestart::FormShow(TObject *Sender)
+{
+//	Edit1->Text = frmAutoPilotRestart->DB_MON_OPTION_AUTORESTART ;
 }
 //---------------------------------------------------------------------------
 
