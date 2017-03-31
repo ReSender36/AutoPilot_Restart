@@ -33,9 +33,18 @@ __fastcall TfrmLauncherOptions::TfrmLauncherOptions(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
-void setOptionValue(String db, String table, String option)
+void setOptionValue(String option, String value)
 {
-
+	String str_comm = String("UPDATE " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " SET VALUE = '" + value + "' where OPTION_NAME = '" + option + "';") ;
+	frmAutoPilotRestart->FDCommand1->CommandText->Add(str_comm) ;
+	if(frmAutoPilotRestart->db_connect()){
+		try{
+			frmAutoPilotRestart->FDCommand1->Execute() ;
+		}catch(...){
+        	int resp = Application->MessageBox(String("Проблемы при записи в БД параметра " + option + " по причине " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
+		}
+	}
+	if(frmAutoPilotRestart->db_disconnect()){}
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmLauncherOptions::FormCreate(TObject *Sender)
@@ -81,18 +90,35 @@ void __fastcall TfrmLauncherOptions::BitBtn2Click(TObject *Sender)
 	Application->Terminate() ;
 }
 //---------------------------------------------------------------------------
+String getValue(TEdit* ed){
+	String str = "" ;
+	str = ed->Text ;
+	return str ;
+}
+//---------------------------------------------------------------------------
 void __fastcall TfrmLauncherOptions::BitBtn1Click(TObject *Sender)
 {
+	String srvIP = getValue(edServerIP) ;
+	String srvName = getValue(edServerName) ;
+	String srvLogin = getValue(edUserName) ;
+	String srvPass = getValue(edPassword) ;
+
+	String autopilotPath = getValue(edAutopilotPath) ;
+	String servicePath = getValue(edServicePath) ;
+	String restartTimeout = getValue(edTimer) ;
+	int iRestartTimeout = StrToInt(restartTimeout) * 1000 ;
+
 	TIniFile *ini ;
 	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
-
-	ini->WriteString("DB_Param", "Address", edServerIP->Text) ;
-	ini->WriteString("DB_Param", "Server", edServerName->Text) ;
-	ini->WriteString("DB_Param", "UserName", edUserName->Text) ;
-	ini->WriteString("DB_Param", "Password", edPassword->Text) ;
+	ini->WriteString("DB_Param", "Address", srvIP) ;
+	ini->WriteString("DB_Param", "Server", srvName) ;
+	ini->WriteString("DB_Param", "UserName", srvLogin) ;
+	ini->WriteString("DB_Param", "Password", srvPass) ;
 	ini->Free() ;
 
-//	setOptionValue(DB_MONITOR, DB_MON_OPTABLE,)
+	setOptionValue(DB_MON_OPTION_AUTOPILOTSHORTCUT,autopilotPath) ;
+	setOptionValue(DB_MON_OPTION_SERVICESHORTCUT,servicePath) ;
+	setOptionValue(DB_MON_OPTION_TIMERRESTARTDELAY,IntToStr(iRestartTimeout)) ;
 
 	frmLauncherOptions->Visible = false ;
 //	frmAutoPilotRestart->DB_MON_OPTION_AUTORESTART = "mega stroka" ;

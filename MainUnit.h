@@ -56,6 +56,7 @@ __published:	// IDE-managed Components
 	void __fastcall N3Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
+	void __fastcall N2Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmAutoPilotRestart(TComponent* Owner);
@@ -100,15 +101,17 @@ bool db_connect()
 //---------------------------------------------------------------------------
 bool db_disconnect()
 {
+	bool state ;
 	try{
 		if(FDConnection1->Connected){
 			FDConnection1->Connected = false ;
-			return true ;
+			state = true ;
 		}
 	}
 	catch(...){
-		return false ;
+		state = false ;
 	}
+	return state ;
 }
 };
 //---------------------------------------------------------------------------

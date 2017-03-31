@@ -32,6 +32,19 @@ __fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
+String getOptionValue(String db, String table, String option)
+{
+	String strResult = "" ;
+	frmAutoPilotRestart->FDQuery1->SQL->Text = String("select value from " + db + ".dbo." + table + " where option_name = '" + option + "'") ;
+	frmAutoPilotRestart->FDQuery1->Active = true ;
+	frmAutoPilotRestart->FDQuery1->First() ;
+	while(!frmAutoPilotRestart->FDQuery1->Eof){
+		strResult = frmAutoPilotRestart->FDQuery1->FieldByName("value")->AsString ;
+		frmAutoPilotRestart->FDQuery1->Next() ;
+	}
+	return strResult ;
+}
+//---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 {
    LPWSTR *szArglist;
@@ -59,24 +72,39 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 	if("-o" == PARAM){
 	   Application->CreateForm(__classid(TfrmLauncherOptions), &frmLauncherOptions) ;
 	   frmLauncherOptions->Visible = true ;
+	}else{
+		if("-r" == PARAM){
+			if(db_connect()){
+				FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
+				FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
+				try{
+					FDCommand1->Execute() ;
+				}catch(...){}
+			}
+			int iInterval = StrToInt(getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY)) ;
+			TimerToRestart->Interval = iInterval ;
+			TimerToRestart->Enabled = true ;
+
+			TrayIcon1->Visible = true ;
+			frmAutoPilotRestart->Visible = false ;
+			frmAutoPilotRestart->Hide() ;
+		}else{
+			if("-d" == PARAM){
+				if(db_connect()){
+					FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
+					try{
+						FDCommand1->Execute() ;
+					}catch(...){}
+				}
+				Application->Terminate() ;
+			}
+		}
 	}
+
 
 // Free memory allocated for CommandLineToArgvW arguments.
    LocalFree(szArglist);
    return;
-}
-//---------------------------------------------------------------------------
-String getOptionValue(String db, String table, String option)
-{
-	String strResult = "" ;
-	frmAutoPilotRestart->FDQuery1->SQL->Text = String("select value from " + db + ".dbo." + table + " where option_name = '" + option + "'") ;
-	frmAutoPilotRestart->FDQuery1->Active = true ;
-	frmAutoPilotRestart->FDQuery1->First() ;
-	while(!frmAutoPilotRestart->FDQuery1->Eof){
-		strResult = frmAutoPilotRestart->FDQuery1->FieldByName("value")->AsString ;
-		frmAutoPilotRestart->FDQuery1->Next() ;
-	}
-	return strResult ;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
@@ -95,6 +123,9 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 		int iInterval = StrToInt(getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY)) ;
 		TimerToRestart->Interval = iInterval ;
 		TimerToRestart->Enabled = true ;
+
+		TrayIcon1->Visible = true ;
+		frmAutoPilotRestart->Hide() ;
 	}else{
 		if("-d" == PARAM){
 			if(db_connect()){
@@ -105,7 +136,7 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 
 				}
 			}
-            Application->Terminate() ;
+			Application->Terminate() ;
 		}
 	}
 }
@@ -190,13 +221,20 @@ void __fastcall TfrmAutoPilotRestart::N3Click(TObject *Sender)
 void __fastcall TfrmAutoPilotRestart::Button2Click(TObject *Sender)
 {
 	TrayIcon1->Visible = true ;
- 	frmAutoPilotRestart->Hide() ;
+	frmAutoPilotRestart->Hide() ;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfrmAutoPilotRestart::FormShow(TObject *Sender)
 {
 //	Edit1->Text = frmAutoPilotRestart->DB_MON_OPTION_AUTORESTART ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmAutoPilotRestart::N2Click(TObject *Sender)
+{
+	Application->CreateForm(__classid(TfrmLauncherOptions), &frmLauncherOptions) ;
+	frmLauncherOptions->Visible = true ;
 }
 //---------------------------------------------------------------------------
 
