@@ -24,7 +24,9 @@ const String DB_MON_OPTION_AUTORESTART = "AutopilotRestart" ;
 const String DB_MON_OPTION_AUTOPILOTSHORTCUT = "Str_AutopilotShortcut" ;
 const String DB_MON_OPTION_SERVICESHORTCUT = "Str_ServiceShortcut" ;
 const String DB_MON_OPTION_TIMERRESTARTDELAY = "TimerRestartDelay" ;
+
 const String DB_MON_LOGTABLE = "LOGS" ;
+const short DB_MON_EVENT_AUTOPILOT_SHUTDOWN = 152 ;
 
 //---------------------------------------------------------------------------
 __fastcall TfrmAutoPilotRestart::TfrmAutoPilotRestart(TComponent* Owner)
@@ -45,6 +47,11 @@ String getOptionValue(String db, String table, String option)
 	return strResult ;
 }
 //---------------------------------------------------------------------------
+String getLastTogRecord(String db, String table, int event_num)
+{
+
+}
+//---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 {
    LPWSTR *szArglist;
@@ -62,7 +69,7 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 	  return ;
    }
    else
-   	for( i=0; i<nArgs; i++){
+	for( i=0; i<nArgs; i++){
 //		Edit1->Text = szArglist[i] ; //printf("%d: %ws\n", i, szArglist[i]);
 		PARAM = szArglist[i] ;
 	}
@@ -143,6 +150,8 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 {
+	String strGo = getLastTogRecord(DB_MONITOR, DB_MON_LOGTABLE, DB_MON_EVENT_AUTOPILOT_SHUTDOWN) ;
+
 	String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART) ;
 	String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTOPILOTSHORTCUT) ;
 	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT) ;
