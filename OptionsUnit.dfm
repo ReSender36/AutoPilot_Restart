@@ -2,7 +2,7 @@ object frmLauncherOptions: TfrmLauncherOptions
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1079#1072#1087#1091#1089#1082#1072#1090#1086#1088#1072
-  ClientHeight = 148
+  ClientHeight = 231
   ClientWidth = 782
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

@@ -38,16 +38,17 @@ __published:	// IDE-managed Components
 	TButton *Button1;
 	TTimer *TimerToRestart;
 	TFDPhysMSSQLDriverLink *FDPhysMSSQLDriverLink1;
-	TFDConnection *FDConnection1;
 	TFDGUIxWaitCursor *FDGUIxWaitCursor1;
 	TFDCommand *FDCommand1;
 	TFDQuery *FDQuery1;
 	TTrayIcon *TrayIcon1;
 	TPopupMenu *PopupMenu1;
-	TMenuItem *N1;
 	TMenuItem *N2;
 	TMenuItem *N3;
 	TButton *Button2;
+	TMenuItem *N4;
+	TFDConnection *FDConnection1;
+	TTimer *timerToHideForm;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall TimerToRestartTimer(TObject *Sender);
@@ -55,14 +56,16 @@ __published:	// IDE-managed Components
 	void __fastcall N1Click(TObject *Sender);
 	void __fastcall N3Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
-	void __fastcall FormShow(TObject *Sender);
 	void __fastcall N2Click(TObject *Sender);
+	void __fastcall N4Click(TObject *Sender);
+	void __fastcall timerToHideFormTimer(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmAutoPilotRestart(TComponent* Owner);
 //---------------------------------------------------------------------------
 bool db_connect()
 {
+	bool state ;
 	TIniFile *ini ;
 	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
  /*	if ("" == ini){
@@ -84,7 +87,7 @@ bool db_connect()
 		try{
 			FDConnection1->Connected = true ;
 			if (FDConnection1->Connected)
-				return true ;
+				state = true ;
 		}
 		catch(...){
 			int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
@@ -94,9 +97,10 @@ bool db_connect()
 				case IDNO:
 					break ;
 			}
-			return false ;
+			state = false ;
 		}
 	}
+	return state ;
 }
 //---------------------------------------------------------------------------
 bool db_disconnect()
