@@ -41,8 +41,9 @@ void setOptionValue(String option, String value)
 		try{
 			frmAutoPilotRestart->FDCommand1->Execute() ;
 		}catch(...){
-        	int resp = Application->MessageBox(String("Проблемы при записи в БД параметра " + option + " по причине " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
+			int resp = Application->MessageBox(String("Проблемы при записи в БД параметра " + option + " по причине " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
 		}
+		frmAutoPilotRestart->FDCommand1->CommandText->Clear() ;
 	}
 	if(frmAutoPilotRestart->db_disconnect()){}
 }

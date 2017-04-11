@@ -115,6 +115,7 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 				try{
 					FDCommand1->Execute() ;
 				}catch(...){}
+				FDCommand1->CommandText->Clear() ;
 			}
 			int iInterval = StrToInt(getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY)) ;
 			TimerToRestart->Interval = iInterval ;
@@ -130,6 +131,7 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 					try{
 						FDCommand1->Execute() ;
 					}catch(...){}
+					FDCommand1->CommandText->Clear() ;
 				}
 				Application->Terminate() ;
 			}
@@ -151,9 +153,9 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 			FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
 			try{
 				FDCommand1->Execute() ;
-			}catch(...){
 
-			}
+			}catch(...){}
+			FDCommand1->CommandText->Clear() ;
 		}
 		int iInterval = StrToInt(getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY)) ;
 		TimerToRestart->Interval = iInterval ;
@@ -167,9 +169,8 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 				FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
 				try{
 					FDCommand1->Execute() ;
-				}catch(...){
-
-				}
+				}catch(...){}
+				FDCommand1->CommandText->Clear() ;
 			}
 			Application->Terminate() ;
 		}
@@ -191,9 +192,11 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 				DB_MON_OPTION_AUTORESTART + "' ;");
 			try {
 				FDCommand1->Execute();
+
 			}
-			catch (...) {
-			}
+			catch (...) {}
+			FDCommand1->CommandText->Clear() ;
+
 			// запускаем
 			STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
 			PROCESS_INFORMATION ProcInfo;
@@ -252,8 +255,8 @@ void __fastcall TfrmAutoPilotRestart::N3Click(TObject *Sender)
 		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
 		try{
 			FDCommand1->Execute() ;
-		}catch(...){
-		}
+		}catch(...){}
+		FDCommand1->CommandText->Clear() ;
 	}
 
 	Application->Terminate() ;
@@ -286,8 +289,8 @@ void __fastcall TfrmAutoPilotRestart::N4Click(TObject *Sender)
 			try {
 				FDCommand1->Execute();
 			}
-			catch (...) {
-			}
+			catch (...) {}
+			FDCommand1->CommandText->Clear() ;
 		}
 		// запускаем
 		STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
