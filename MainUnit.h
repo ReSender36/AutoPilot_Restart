@@ -99,7 +99,10 @@ bool db_connect()
 			}
 			state = false ;
 		}
+	}else{
+    	state = true ;
 	}
+
 	return state ;
 }
 //---------------------------------------------------------------------------
@@ -117,6 +120,42 @@ bool db_disconnect()
 	}
 	return state ;
 }
+//---------------------------------------------------------------------------
+void recToDB(String strEventNum, String strMessage){
+	String strComm = String("insert into DB1S_monitor.dbo.logs (tran_date, doc_num, message_txt, event_num, p_filename, p_ArchFilename, Procedure_name, doc_type, filename, directions, interface, doc_date, bailor, doc_state, performer) \
+	 values(current_timestamp, '', '" + strMessage + "','" + strEventNum + "','','','AutopilotRestart','','',0,'','','','','space') ;") ;
+	FDCommand1->CommandText->Add(strComm) ;
+	try{
+		FDCommand1->Execute() ;
+		FDCommand1->CommandText->Clear() ;
+	}catch(...){}
+}
+//---------------------------------------------------------------------------
+String getEventMsg(String strEventNum){
+	String strRes = "" ;
+
+	String strQ = String("SELECT caption FROM DB1S_monitor.dbo.sys_events where kind = " + strEventNum + " ;") ;
+	FDQuery1->Active = false ;
+	FDQuery1->SQL->Text = strQ ;
+	FDQuery1->Active = true ;
+	FDQuery1->First() ;
+	while(!FDQuery1->Eof){
+		strRes = FDQuery1->FieldByName("caption")->AsString ;
+		FDQuery1->Next() ;
+	}
+	return strRes ;
+}
+//---------------------------------------------------------------------------
+void recToLog(short shEventNum, String strMsg = ""){
+	if(db_connect()){
+		String strEventNum = IntToStr(shEventNum) ;
+		String strMessage = getEventMsg(strEventNum) ;
+		strMessage = strMessage + " " + strMsg ;
+		recToDB(strEventNum, strMessage) ;
+	}
+ //	db_disconnect() ;
+}
+//---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfrmAutoPilotRestart *frmAutoPilotRestart;

@@ -105,10 +105,12 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 //	Application->ShowMainForm = false ;
 //	frmAutoPilotRestart->Visible = false ;
 	if("-o" == PARAM){
+       recToLog(164) ;
 	   Application->CreateForm(__classid(TfrmLauncherOptions), &frmLauncherOptions) ;
 	   frmLauncherOptions->Visible = true ;
 	}else{
 		if("-r" == PARAM){
+			recToLog(161) ;
 			if(db_connect()){
 				FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
 				FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
@@ -126,6 +128,7 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 //			frmAutoPilotRestart->Hide() ;
 		}else{
 			if("-d" == PARAM){
+				recToLog(162) ;
 				if(db_connect()){
 					FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
 					try{
@@ -148,6 +151,7 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 {
 
 	if("-r" == PARAM){
+		recToLog(161) ;
 		if(db_connect()){
 			FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
 			FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'Y' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
@@ -165,6 +169,7 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 		frmAutoPilotRestart->Hide() ;
 	}else{
 		if("-d" == PARAM){
+			recToLog(162) ;
 			if(db_connect()){
 				FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
 				try{
@@ -179,6 +184,7 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 {
+	recToLog(163) ;
 	String strGo = getLastTogRecord(DB_MONITOR, DB_MON_LOGTABLE, DB_MON_EVENT_AUTOPILOT_SHUTDOWN, DB_MON_EVENT_AUTOPILOT_STARTED) ;
 	if ("157" != strGo) {
 		String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART);
@@ -250,6 +256,7 @@ void __fastcall TfrmAutoPilotRestart::N1Click(TObject *Sender)
 
 void __fastcall TfrmAutoPilotRestart::N3Click(TObject *Sender)
 {
+	recToLog(166) ;
 // снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
 	if(db_connect()){
 		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
@@ -270,6 +277,7 @@ void __fastcall TfrmAutoPilotRestart::Button2Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::N2Click(TObject *Sender)
 {
+	recToLog(164) ;
 	Application->CreateForm(__classid(TfrmLauncherOptions), &frmLauncherOptions) ;
 	frmLauncherOptions->Visible = true ;
 }
@@ -277,35 +285,36 @@ void __fastcall TfrmAutoPilotRestart::N2Click(TObject *Sender)
 
 void __fastcall TfrmAutoPilotRestart::N4Click(TObject *Sender)
 {
-		String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART);
-		String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE,DB_MON_OPTION_AUTOPILOTSHORTCUT);
-		String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT);
+	recToLog(165) ;
+	String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART);
+	String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE,DB_MON_OPTION_AUTOPILOTSHORTCUT);
+	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT);
 
-		if ("Y" == strVal) {
-			// снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
-			FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." +
-				DB_MON_OPTABLE + " set value = 'N' where option_name = '" +
-				DB_MON_OPTION_AUTORESTART + "' ;");
-			try {
-				FDCommand1->Execute();
-			}
-			catch (...) {}
-			FDCommand1->CommandText->Clear() ;
+	if ("Y" == strVal) {
+	// снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
+	FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." +
+		DB_MON_OPTABLE + " set value = 'N' where option_name = '" +
+		DB_MON_OPTION_AUTORESTART + "' ;");
+	try {
+		FDCommand1->Execute();
+	}
+	catch (...) {}
+	FDCommand1->CommandText->Clear() ;
+	}
+	// запускаем
+	STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
+	PROCESS_INFORMATION ProcInfo;
+	LPCTSTR s;
+	StartInfo.cb = sizeof(StartInfo);
+	StartInfo.dwFlags = STARTF_USESHOWWINDOW;
+	StartInfo.wShowWindow = SW_SHOWNORMAL;
+	String strProg = strAutopilotShortcut;
+	if (!CreateProcess(NULL, strProg.w_str(), NULL, NULL, false,
+		CREATE_NEW_CONSOLE | HIGH_PRIORITY_CLASS, NULL, NULL,
+		&StartInfo, &ProcInfo)) {
+		ShowMessage("ќшибка запуска автопилота: " + SysErrorMessage
+			(GetLastError()));
 		}
-		// запускаем
-		STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
-		PROCESS_INFORMATION ProcInfo;
-		LPCTSTR s;
-		StartInfo.cb = sizeof(StartInfo);
-		StartInfo.dwFlags = STARTF_USESHOWWINDOW;
-		StartInfo.wShowWindow = SW_SHOWNORMAL;
-		String strProg = strAutopilotShortcut;
-		if (!CreateProcess(NULL, strProg.w_str(), NULL, NULL, false,
-			CREATE_NEW_CONSOLE | HIGH_PRIORITY_CLASS, NULL, NULL,
-			&StartInfo, &ProcInfo)) {
-			ShowMessage("ќшибка запуска автопилота: " + SysErrorMessage
-				(GetLastError()));
-			}
 }
 //---------------------------------------------------------------------------
 
