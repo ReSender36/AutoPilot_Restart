@@ -2,7 +2,7 @@ object frmLauncherOptions: TfrmLauncherOptions
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1079#1072#1087#1091#1089#1082#1072#1090#1086#1088#1072
-  ClientHeight = 231
+  ClientHeight = 177
   ClientWidth = 782
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -82,7 +82,7 @@ object frmLauncherOptions: TfrmLauncherOptions
     Left = 255
     Top = 8
     Width = 519
-    Height = 105
+    Height = 132
     Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1077#1088#1077#1079#1072#1087#1091#1089#1082#1072
     TabOrder = 1
     object lblAutopilotPath: TLabel
@@ -111,6 +111,18 @@ object frmLauncherOptions: TfrmLauncherOptions
       ParentShowHint = False
       ShowHint = True
     end
+    object lblTimerRepeat: TLabel
+      Left = 3
+      Top = 104
+      Width = 253
+      Height = 13
+      Hint = 
+        #1044#1083#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100' '#1087#1072#1091#1079#1099' '#1085#1072' '#1086#1089#1090#1072#1085#1086#1074#1082#1091' '#1072#1074#1090#1086#1087#1080#1083#1086#1090#1072' '#1087#1077#1088#1077#1076' '#1087#1086#1074#1090#1086#1088#1085#1099#1084' '#1079#1072#1087#1091#1089 +
+        #1082#1086#1084
+      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086#1074#1090#1086#1088#1085#1086#1075#1086' '#1089#1088#1072#1073#1072#1090#1099#1074#1072#1085#1080#1103' '#1090#1072#1081#1084#1077#1088#1072' ('#1089#1077#1082'):'
+      ParentShowHint = False
+      ShowHint = True
+    end
     object edAutopilotPath: TEdit
       Left = 213
       Top = 21
@@ -126,16 +138,23 @@ object frmLauncherOptions: TfrmLauncherOptions
       TabOrder = 1
     end
     object edTimer: TEdit
-      Left = 213
+      Left = 262
       Top = 77
       Width = 121
       Height = 21
       TabOrder = 2
     end
+    object edTimerRepeat: TEdit
+      Left = 262
+      Top = 101
+      Width = 121
+      Height = 21
+      TabOrder = 3
+    end
   end
   object BitBtn1: TBitBtn
     Left = 600
-    Top = 119
+    Top = 146
     Width = 75
     Height = 25
     Kind = bkOK
@@ -145,7 +164,7 @@ object frmLauncherOptions: TfrmLauncherOptions
   end
   object BitBtn2: TBitBtn
     Left = 699
-    Top = 119
+    Top = 146
     Width = 75
     Height = 25
     Kind = bkCancel

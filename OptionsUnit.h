@@ -30,6 +30,8 @@ __published:	// IDE-managed Components
 	TEdit *edTimer;
 	TBitBtn *BitBtn1;
 	TBitBtn *BitBtn2;
+	TLabel *lblTimerRepeat;
+	TEdit *edTimerRepeat;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall BitBtn2Click(TObject *Sender);
 	void __fastcall BitBtn1Click(TObject *Sender);

@@ -19,6 +19,7 @@ const String DB_MON_OPTION_AUTORESTART = "AutopilotRestart" ;
 const String DB_MON_OPTION_AUTOPILOTSHORTCUT = "Str_AutopilotShortcut" ;
 const String DB_MON_OPTION_SERVICESHORTCUT = "Str_ServiceShortcut" ;
 const String DB_MON_OPTION_TIMERRESTARTDELAY = "TimerRestartDelay" ;
+const String DB_MON_OPTION_TIMERRESTARTREPEAT = "TimerRestartRepeat" ;
 const String DB_MON_LOGTABLE = "LOGS" ;
 
 String static ADDRESS = "" ;
@@ -59,7 +60,7 @@ void __fastcall TfrmLauncherOptions::FormCreate(TObject *Sender)
 	PASSWORD = ini->ReadString("DB_Param", "Password", 1) ;
 	ini->Free() ;
 
-	String str = "SELECT VALUE, OPTION_NAME FROM " + DB_MONITOR + ".DBO." + DB_MON_OPTABLE + " WHERE OPTION_NAME IN('AutopilotRestart','Str_AutopilotShortcut','Str_ServiceShortcut','TimerRestartDelay') ;"  ;
+	String str = "SELECT VALUE, OPTION_NAME FROM " + DB_MONITOR + ".DBO." + DB_MON_OPTABLE + " WHERE OPTION_NAME IN('AutopilotRestart','Str_AutopilotShortcut','Str_ServiceShortcut','TimerRestartDelay','TimerRestartRepeat') ;"  ;
 	if(frmAutoPilotRestart->db_connect()){
 		frmAutoPilotRestart->FDQuery1->Active = false ;
 		frmAutoPilotRestart->FDQuery1->SQL->Text = String(str) ;
@@ -72,6 +73,8 @@ void __fastcall TfrmLauncherOptions::FormCreate(TObject *Sender)
 				edServicePath->Text = frmAutoPilotRestart->FDQuery1->FieldByName("VALUE")->AsString ;
 			if("TimerRestartDelay" == frmAutoPilotRestart->FDQuery1->FieldByName("OPTION_NAME")->AsString)
 				edTimer->Text = IntToStr(frmAutoPilotRestart->FDQuery1->FieldByName("VALUE")->AsInteger / 1000) ;
+			if("TimerRestartRepeat" == frmAutoPilotRestart->FDQuery1->FieldByName("OPTION_NAME")->AsString)
+				edTimerRepeat->Text = IntToStr(frmAutoPilotRestart->FDQuery1->FieldByName("VALUE")->AsInteger / 1000) ;
 
 			frmAutoPilotRestart->FDQuery1->Next() ;
 		}
@@ -108,6 +111,8 @@ void __fastcall TfrmLauncherOptions::BitBtn1Click(TObject *Sender)
 	String servicePath = getValue(edServicePath) ;
 	String restartTimeout = getValue(edTimer) ;
 	int iRestartTimeout = StrToInt(restartTimeout) * 1000 ;
+	String repeatTimeout = getValue(edTimerRepeat) ;
+	int iRepeatTimeout = StrToInt(repeatTimeout) * 1000 ;
 
 	TIniFile *ini ;
 	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
@@ -120,6 +125,7 @@ void __fastcall TfrmLauncherOptions::BitBtn1Click(TObject *Sender)
 	setOptionValue(DB_MON_OPTION_AUTOPILOTSHORTCUT,autopilotPath) ;
 	setOptionValue(DB_MON_OPTION_SERVICESHORTCUT,servicePath) ;
 	setOptionValue(DB_MON_OPTION_TIMERRESTARTDELAY,IntToStr(iRestartTimeout)) ;
+	setOptionValue(DB_MON_OPTION_TIMERRESTARTREPEAT,IntToStr(iRepeatTimeout)) ;
 
 	frmLauncherOptions->Visible = false ;
 //	frmAutoPilotRestart->DB_MON_OPTION_AUTORESTART = "mega stroka" ;

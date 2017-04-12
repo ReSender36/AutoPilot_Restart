@@ -25,6 +25,7 @@ const String DB_MON_OPTION_AUTORESTART = "AutopilotRestart" ;
 const String DB_MON_OPTION_AUTOPILOTSHORTCUT = "Str_AutopilotShortcut" ;
 const String DB_MON_OPTION_SERVICESHORTCUT = "Str_ServiceShortcut" ;
 const String DB_MON_OPTION_TIMERRESTARTDELAY = "TimerRestartDelay" ;
+const String DB_MON_OPTION_TIMERRESTARTREPEAT = "TimerRestartRepeat" ;
 
 const String DB_MON_LOGTABLE = "LOGS" ;
 const String DB_MON_LOG_EVENTNUM = "event_num" ;
@@ -232,6 +233,13 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 			// CreateProcess(NULL, strProg.w_str(),NULL,NULL,false,
 			// CREATE_NEW_CONSOLE|HIGH_PRIORITY_CLASS,NULL,NULL,&StartInfo,&ProcInfo) ;
 		}
+	}else{
+        recToLog(167) ;
+		TimerToRestart->Enabled = false ;
+		int iInterval = StrToInt(getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTREPEAT)) ;
+		TimerToRestart->Interval = iInterval ;
+		TimerToRestart->Enabled = true ;
+
 	}
 	// Edit1->Text = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY) ;
 	// Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
