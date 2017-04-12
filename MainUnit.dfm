@@ -12,7 +12,6 @@ object frmAutoPilotRestart: TfrmAutoPilotRestart
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Edit1: TEdit
@@ -45,36 +44,29 @@ object frmAutoPilotRestart: TfrmAutoPilotRestart
     Enabled = False
     Interval = 3000
     OnTimer = TimerToRestartTimer
-    Left = 32
-    Top = 136
+    Left = 392
+    Top = 152
   end
   object FDPhysMSSQLDriverLink1: TFDPhysMSSQLDriverLink
     DriverID = 'MS_SQL'
     ODBCDriver = 'SQL Server'
-    Left = 304
-    Top = 64
-  end
-  object FDConnection1: TFDConnection
-    Params.Strings = (
-      'DriverID=MS_SQL')
-    LoginPrompt = False
-    Left = 208
-    Top = 136
+    Left = 152
+    Top = 16
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
-    Left = 224
-    Top = 16
-  end
-  object FDCommand1: TFDCommand
-    Connection = FDConnection1
     Left = 24
     Top = 24
   end
+  object FDCommand1: TFDCommand
+    Connection = FDConnection1
+    Left = 56
+    Top = 152
+  end
   object FDQuery1: TFDQuery
     Connection = FDConnection1
-    Left = 24
-    Top = 80
+    Left = 120
+    Top = 152
   end
   object TrayIcon1: TTrayIcon
     Icon.Data = {
@@ -108,19 +100,32 @@ object frmAutoPilotRestart: TfrmAutoPilotRestart
     Top = 32
   end
   object PopupMenu1: TPopupMenu
-    Left = 120
-    Top = 136
-    object N1: TMenuItem
-      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100
-      OnClick = N1Click
-    end
+    Left = 400
+    Top = 96
     object N2: TMenuItem
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
       OnClick = N2Click
     end
+    object N4: TMenuItem
+      Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1072#1074#1090#1086#1087#1080#1083#1086#1090' '#1085#1077#1084#1077#1076#1083#1077#1085#1085#1086
+      OnClick = N4Click
+    end
     object N3: TMenuItem
-      Caption = #1055#1088#1077#1088#1074#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1079#1072#1087#1091#1089#1082#1072
+      Caption = #1055#1088#1077#1088#1074#1072#1090#1100' '#1087#1077#1088#1077#1079#1072#1087#1091#1089#1082' '#1080' '#1074#1099#1081#1090#1080
       OnClick = N3Click
     end
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=MS_SQL')
+    LoginPrompt = False
+    Left = 23
+    Top = 102
+  end
+  object timerToHideForm: TTimer
+    Interval = 500
+    OnTimer = timerToHideFormTimer
+    Left = 288
+    Top = 24
   end
 end

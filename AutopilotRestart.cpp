@@ -6,6 +6,7 @@
 //---------------------------------------------------------------------------
 USEFORM("MainUnit.cpp", frmAutoPilotRestart);
 USEFORM("OptionsUnit.cpp", frmLauncherOptions);
+USEFORM("DMMainUnit.cpp", dmMain); /* TDataModule: File Type */
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

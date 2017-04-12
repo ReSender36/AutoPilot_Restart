@@ -38,16 +38,17 @@ __published:	// IDE-managed Components
 	TButton *Button1;
 	TTimer *TimerToRestart;
 	TFDPhysMSSQLDriverLink *FDPhysMSSQLDriverLink1;
-	TFDConnection *FDConnection1;
 	TFDGUIxWaitCursor *FDGUIxWaitCursor1;
 	TFDCommand *FDCommand1;
 	TFDQuery *FDQuery1;
 	TTrayIcon *TrayIcon1;
 	TPopupMenu *PopupMenu1;
-	TMenuItem *N1;
 	TMenuItem *N2;
 	TMenuItem *N3;
 	TButton *Button2;
+	TMenuItem *N4;
+	TFDConnection *FDConnection1;
+	TTimer *timerToHideForm;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall TimerToRestartTimer(TObject *Sender);
@@ -55,14 +56,16 @@ __published:	// IDE-managed Components
 	void __fastcall N1Click(TObject *Sender);
 	void __fastcall N3Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
-	void __fastcall FormShow(TObject *Sender);
 	void __fastcall N2Click(TObject *Sender);
+	void __fastcall N4Click(TObject *Sender);
+	void __fastcall timerToHideFormTimer(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmAutoPilotRestart(TComponent* Owner);
 //---------------------------------------------------------------------------
 bool db_connect()
 {
+	bool state ;
 	TIniFile *ini ;
 	ini = new TIniFile(ChangeFileExt(Application->ExeName, ".ini")) ;
  /*	if ("" == ini){
@@ -84,7 +87,7 @@ bool db_connect()
 		try{
 			FDConnection1->Connected = true ;
 			if (FDConnection1->Connected)
-				return true ;
+				state = true ;
 		}
 		catch(...){
 			int q_conn = Application->MessageBox(String("Проблемы при подключении к БД " + SysErrorMessage(GetLastError())).w_str(),String("Проблема").w_str(),MB_OK) ;
@@ -94,9 +97,13 @@ bool db_connect()
 				case IDNO:
 					break ;
 			}
-			return false ;
+			state = false ;
 		}
+	}else{
+    	state = true ;
 	}
+
+	return state ;
 }
 //---------------------------------------------------------------------------
 bool db_disconnect()
@@ -113,6 +120,42 @@ bool db_disconnect()
 	}
 	return state ;
 }
+//---------------------------------------------------------------------------
+void recToDB(String strEventNum, String strMessage){
+	String strComm = String("insert into DB1S_monitor.dbo.logs (tran_date, doc_num, message_txt, event_num, p_filename, p_ArchFilename, Procedure_name, doc_type, filename, directions, interface, doc_date, bailor, doc_state, performer) \
+	 values(current_timestamp, '', '" + strMessage + "','" + strEventNum + "','','','AutopilotRestart','','',0,'','','','','space') ;") ;
+	FDCommand1->CommandText->Add(strComm) ;
+	try{
+		FDCommand1->Execute() ;
+		FDCommand1->CommandText->Clear() ;
+	}catch(...){}
+}
+//---------------------------------------------------------------------------
+String getEventMsg(String strEventNum){
+	String strRes = "" ;
+
+	String strQ = String("SELECT caption FROM DB1S_monitor.dbo.sys_events where kind = " + strEventNum + " ;") ;
+	FDQuery1->Active = false ;
+	FDQuery1->SQL->Text = strQ ;
+	FDQuery1->Active = true ;
+	FDQuery1->First() ;
+	while(!FDQuery1->Eof){
+		strRes = FDQuery1->FieldByName("caption")->AsString ;
+		FDQuery1->Next() ;
+	}
+	return strRes ;
+}
+//---------------------------------------------------------------------------
+void recToLog(short shEventNum, String strMsg = ""){
+	if(db_connect()){
+		String strEventNum = IntToStr(shEventNum) ;
+		String strMessage = getEventMsg(strEventNum) ;
+		strMessage = strMessage + " " + strMsg ;
+		recToDB(strEventNum, strMessage) ;
+	}
+ //	db_disconnect() ;
+}
+//---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfrmAutoPilotRestart *frmAutoPilotRestart;
