@@ -121,9 +121,11 @@ bool db_disconnect()
 	return state ;
 }
 //---------------------------------------------------------------------------
-void recToDB(String strEventNum, String strMessage){
-	String strComm = String("insert into DB1S_monitor.dbo.logs (tran_date, doc_num, message_txt, event_num, p_filename, p_ArchFilename, Procedure_name, doc_type, filename, directions, interface, doc_date, bailor, doc_state, performer) \
-	 values(current_timestamp, '', '" + strMessage + "','" + strEventNum + "','','','AutopilotRestart','','',0,'','','','','space') ;") ;
+void recToDB(String strEventNum, String strMessage, int iEventNum){
+	String strRestEvent = IntToStr(iEventNum) ;
+	String strComm = String("insert into DB1S_monitor.dbo.logs (tran_date, doc_num, message_txt, event_num, p_filename, p_ArchFilename, Procedure_name, doc_type, filename, directions, interface, doc_date, bailor, doc_state, performer, RESTART_EVENT) \
+	 values(current_timestamp, '', '" + strMessage + "','" + strEventNum + "','','','AutopilotRestart','','',0,'','','','','space', " + strRestEvent + ") ;") ;
+	FDCommand1->CommandText->Clear() ;
 	FDCommand1->CommandText->Add(strComm) ;
 	try{
 		FDCommand1->Execute() ;
@@ -146,12 +148,12 @@ String getEventMsg(String strEventNum){
 	return strRes ;
 }
 //---------------------------------------------------------------------------
-void recToLog(short shEventNum, String strMsg = "", String strRestart_Event = ""){
+void recToLog(short shEventNum, String strMsg = "", int iRestart_Event = 0){
 	if(db_connect()){
 		String strEventNum = IntToStr(shEventNum) ;
 		String strMessage = getEventMsg(strEventNum) ;
 		strMessage = strMessage + " " + strMsg ;
-		recToDB(strEventNum, strMessage) ;
+		recToDB(strEventNum, strMessage, iRestart_Event) ;
 	}
  //	db_disconnect() ;
 }
