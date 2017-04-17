@@ -146,7 +146,7 @@ String getEventMsg(String strEventNum){
 	return strRes ;
 }
 //---------------------------------------------------------------------------
-void recToLog(short shEventNum, String strMsg = ""){
+void recToLog(short shEventNum, String strMsg = "", String strRestart_Event = ""){
 	if(db_connect()){
 		String strEventNum = IntToStr(shEventNum) ;
 		String strMessage = getEventMsg(strEventNum) ;

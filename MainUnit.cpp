@@ -62,6 +62,39 @@ String getOptionValue(String db, String table, String option)
 	return strResult ;
 }
 //---------------------------------------------------------------------------
+void stopRestartAndRun(){
+	frmAutoPilotRestart->recToLog(165) ;
+	String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART);
+	String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE,DB_MON_OPTION_AUTOPILOTSHORTCUT);
+	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT);
+
+	if ("Y" == strVal) {
+	// снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
+		frmAutoPilotRestart->FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." +
+		DB_MON_OPTABLE + " set value = 'N' where option_name = '" +
+		DB_MON_OPTION_AUTORESTART + "' ;");
+	try {
+		frmAutoPilotRestart->FDCommand1->Execute();
+	}
+	catch (...) {}
+	frmAutoPilotRestart->FDCommand1->CommandText->Clear() ;
+	}
+	// запускаем
+	STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
+	PROCESS_INFORMATION ProcInfo;
+	LPCTSTR s;
+	StartInfo.cb = sizeof(StartInfo);
+	StartInfo.dwFlags = STARTF_USESHOWWINDOW;
+	StartInfo.wShowWindow = SW_SHOWNORMAL;
+	String strProg = strAutopilotShortcut;
+	if (!CreateProcess(NULL, strProg.w_str(), NULL, NULL, false,
+		CREATE_NEW_CONSOLE | HIGH_PRIORITY_CLASS, NULL, NULL,
+		&StartInfo, &ProcInfo)) {
+		ShowMessage("ќшибка запуска автопилота: " + SysErrorMessage
+			(GetLastError()));
+		}
+}
+//---------------------------------------------------------------------------
 String getLastTogRecord(String db, String table, int event_num_first, int event_num_last = 0)
 {
 	String strResult = "" ;
@@ -79,6 +112,21 @@ String getLastTogRecord(String db, String table, int event_num_first, int event_
 		frmAutoPilotRestart->FDQuery1->Next() ;
 	}
 	return strResult ;
+}
+//---------------------------------------------------------------------------
+void stopRestart()
+{
+	frmAutoPilotRestart->recToLog(166) ;
+// снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
+	if(frmAutoPilotRestart->db_connect()){
+		frmAutoPilotRestart->FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
+		try{
+			frmAutoPilotRestart->FDCommand1->Execute() ;
+		}catch(...){}
+		frmAutoPilotRestart->FDCommand1->CommandText->Clear() ;
+	}
+
+	Application->Terminate() ;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
@@ -111,6 +159,7 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 	   frmLauncherOptions->Visible = true ;
 	}else{
 		if("-r" == PARAM){
+
 			recToLog(161) ;
 			if(db_connect()){
 				FDCommand1->CommandText->Add("update " + DB_WMS + ".dbo." + DB_WMS_TABLE_CONST + " set value = '1' where id = '" + DB_WMS_CONST_AUTOPILOT_STOP + "' ;") ;
@@ -138,6 +187,13 @@ void __fastcall TfrmAutoPilotRestart::FormCreate(TObject *Sender)
 					FDCommand1->CommandText->Clear() ;
 				}
 				Application->Terminate() ;
+			}else{
+				if("-off" == PARAM)
+					stopRestart() ;
+				else{
+					if("-or" == PARAM)
+						stopRestartAndRun() ;
+				}
 			}
 		}
 	}
@@ -264,17 +320,18 @@ void __fastcall TfrmAutoPilotRestart::N1Click(TObject *Sender)
 
 void __fastcall TfrmAutoPilotRestart::N3Click(TObject *Sender)
 {
-	recToLog(166) ;
+//	recToLog(166) ;
 // снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
-	if(db_connect()){
-		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
-		try{
-			FDCommand1->Execute() ;
-		}catch(...){}
-		FDCommand1->CommandText->Clear() ;
-	}
+//	if(db_connect()){
+//		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." + DB_MON_OPTABLE + " set value = 'N' where option_name = '" + DB_MON_OPTION_AUTORESTART + "' ;") ;
+//		try{
+//			FDCommand1->Execute() ;
+//		}catch(...){}
+//		FDCommand1->CommandText->Clear() ;
+//	}
 
-	Application->Terminate() ;
+//	Application->Terminate() ;
+	stopRestart() ;
 }
 //---------------------------------------------------------------------------
 
@@ -293,36 +350,37 @@ void __fastcall TfrmAutoPilotRestart::N2Click(TObject *Sender)
 
 void __fastcall TfrmAutoPilotRestart::N4Click(TObject *Sender)
 {
-	recToLog(165) ;
-	String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART);
-	String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE,DB_MON_OPTION_AUTOPILOTSHORTCUT);
-	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT);
+//	recToLog(165) ;
+//	String strVal = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_AUTORESTART);
+//	String strAutopilotShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE,DB_MON_OPTION_AUTOPILOTSHORTCUT);
+//	String strServiceShortcut = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_SERVICESHORTCUT);
 
-	if ("Y" == strVal) {
+//	if ("Y" == strVal) {
 	// снимаем флаг, что происходит автоматический рестарт. «ащита от рестарта с иконки на рабочем столе
-	FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." +
-		DB_MON_OPTABLE + " set value = 'N' where option_name = '" +
-		DB_MON_OPTION_AUTORESTART + "' ;");
-	try {
-		FDCommand1->Execute();
-	}
-	catch (...) {}
-	FDCommand1->CommandText->Clear() ;
-	}
+//		FDCommand1->CommandText->Add("update " + DB_MONITOR + ".dbo." +
+//		DB_MON_OPTABLE + " set value = 'N' where option_name = '" +
+//		DB_MON_OPTION_AUTORESTART + "' ;");
+//	try {
+//		FDCommand1->Execute();
+//	}
+//	catch (...) {}
+//	FDCommand1->CommandText->Clear() ;
+//	}
 	// запускаем
-	STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
-	PROCESS_INFORMATION ProcInfo;
-	LPCTSTR s;
-	StartInfo.cb = sizeof(StartInfo);
-	StartInfo.dwFlags = STARTF_USESHOWWINDOW;
-	StartInfo.wShowWindow = SW_SHOWNORMAL;
-	String strProg = strAutopilotShortcut;
-	if (!CreateProcess(NULL, strProg.w_str(), NULL, NULL, false,
-		CREATE_NEW_CONSOLE | HIGH_PRIORITY_CLASS, NULL, NULL,
-		&StartInfo, &ProcInfo)) {
-		ShowMessage("ќшибка запуска автопилота: " + SysErrorMessage
-			(GetLastError()));
-		}
+//	STARTUPINFO StartInfo = {sizeof(TStartupInfo)};
+//	PROCESS_INFORMATION ProcInfo;
+//	LPCTSTR s;
+//	StartInfo.cb = sizeof(StartInfo);
+//	StartInfo.dwFlags = STARTF_USESHOWWINDOW;
+//	StartInfo.wShowWindow = SW_SHOWNORMAL;
+//	String strProg = strAutopilotShortcut;
+//	if (!CreateProcess(NULL, strProg.w_str(), NULL, NULL, false,
+//		CREATE_NEW_CONSOLE | HIGH_PRIORITY_CLASS, NULL, NULL,
+//		&StartInfo, &ProcInfo)) {
+//		ShowMessage("ќшибка запуска автопилота: " + SysErrorMessage
+//			(GetLastError()));
+//		}
+	stopRestartAndRun() ;
 }
 //---------------------------------------------------------------------------
 
