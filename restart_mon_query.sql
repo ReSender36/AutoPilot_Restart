@@ -12,6 +12,6 @@ SELECT l.RESTART_EVENT,
   MAX(CASE WHEN l.event_num = 166 THEN l.tran_date ELSE '' END) cancel_restart,
   MAX(CASE WHEN l.event_num = 165 THEN l.tran_date ELSE '' END) cancel_restart_run_auto
   FROM logs l
-  WHERE l.tran_date BETWEEN '18.04.2017 00:00:00' AND '18.04.2017 23:59:59'
+  WHERE l.tran_date BETWEEN '19.04.2017 00:00:00' AND '19.04.2017 23:59:59'
   AND l.event_num IN(157,158,164,161,162,163,165,166,168)
   GROUP BY l.RESTART_EVENT
