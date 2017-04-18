@@ -49,6 +49,7 @@ __published:	// IDE-managed Components
 	TMenuItem *N4;
 	TFDConnection *FDConnection1;
 	TTimer *timerToHideForm;
+	TTimer *timerToCloseEvent;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall TimerToRestartTimer(TObject *Sender);
@@ -59,6 +60,7 @@ __published:	// IDE-managed Components
 	void __fastcall N2Click(TObject *Sender);
 	void __fastcall N4Click(TObject *Sender);
 	void __fastcall timerToHideFormTimer(TObject *Sender);
+	void __fastcall timerToCloseEventTimer(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfrmAutoPilotRestart(TComponent* Owner);

@@ -95,13 +95,6 @@ int createEventRestart(short sUserID){
 	return result ;
 }
 //---------------------------------------------------------------------------
-void closeEventRestart(){
-	String str = String("UPDATE " + DB_MONITOR + ".dbo." + DB_MON_RESTEVTABLE + " SET " + DB_MON_RESTEV_STATE + " = 2 WHERE " + DB_MON_RESTEV_EVENTID + " = " + iEVENT_RESTART + " ;") ;
-	frmAutoPilotRestart->FDCommand1->CommandText->Clear() ;
-	frmAutoPilotRestart->FDCommand1->CommandText->Add(str) ;
-	frmAutoPilotRestart->FDCommand1->Execute() ;
-}
-//---------------------------------------------------------------------------
 int getRestartUser(String restartUser){
 	short result = 0 ;
 	String com_str = String("SELECT " + DB_MON_CONTACTS_ID + " FROM " + DB_MONITOR + ".dbo." + DB_MON_CONTTABLE + " nm WHERE nm." + DB_MON_CONTACTS_NAME + " = '" + restartUser + "' ;") ;
@@ -115,6 +108,21 @@ int getRestartUser(String restartUser){
 		frmAutoPilotRestart->FDQuery1->Next() ;
 	}
 	return result ;
+}
+//---------------------------------------------------------------------------
+void closeEventRestart(){
+    strRESTART_USER = "автопилот" ;
+	String strMsg = "" ;
+	int iRestartUser = getRestartUser(strRESTART_USER) ;
+//	iEVENT_RESTART = createEventRestart(iRestartUser) ;
+	frmAutoPilotRestart->recToLog(168, strMsg,iEVENT_RESTART) ;
+
+	String str = String("UPDATE " + DB_MONITOR + ".dbo." + DB_MON_RESTEVTABLE + " SET " + DB_MON_RESTEV_STATE + " = 2 WHERE " + DB_MON_RESTEV_EVENTID + " = " + iEVENT_RESTART + " ;") ;
+	frmAutoPilotRestart->FDCommand1->CommandText->Clear() ;
+	frmAutoPilotRestart->FDCommand1->CommandText->Add(str) ;
+	frmAutoPilotRestart->FDCommand1->Execute() ;
+
+	Application->Terminate() ;
 }
 //---------------------------------------------------------------------------
 void stopRestartAndRun(){
@@ -316,6 +324,7 @@ void __fastcall TfrmAutoPilotRestart::Button1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 {
+	bool restartComplete ;
 	strRESTART_USER = "автопилот" ;
 	String strMsg = "" ;
 	int iRestartUser = getRestartUser(strRESTART_USER) ;
@@ -355,7 +364,8 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 				ShowMessage("Ошибка запуска автопилота: " + SysErrorMessage
 					(GetLastError()));
 			}else
-				closeEventRestart() ;
+				restartComplete = true ;
+
 			// else{
 			// if(WaitForSingleObject(ProcInfo.hProcess,10000) == WAIT_TIMEOUT) {}
 			// ShowMessage("Процесс пока идет") ;
@@ -385,8 +395,12 @@ void __fastcall TfrmAutoPilotRestart::TimerToRestartTimer(TObject *Sender)
 	}
 	// Edit1->Text = getOptionValue(DB_MONITOR, DB_MON_OPTABLE, DB_MON_OPTION_TIMERRESTARTDELAY) ;
 	// Edit1->Text = "Нужен интервал 300000 миллисекунд" ;
-	TimerToRestart->Enabled = false;
-	Application->Terminate();
+	if (restartComplete) {
+		timerToCloseEvent->Enabled = true ;
+		TimerToRestart->Enabled = false;
+//		Application->Terminate();
+	}
+	
 }
 // ---------------------------------------------------------------------------
 
@@ -473,6 +487,12 @@ void __fastcall TfrmAutoPilotRestart::N4Click(TObject *Sender)
 void __fastcall TfrmAutoPilotRestart::timerToHideFormTimer(TObject *Sender)
 {
 	hideMainForm() ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmAutoPilotRestart::timerToCloseEventTimer(TObject *Sender)
+{
+	closeEventRestart() ;
 }
 //---------------------------------------------------------------------------
 

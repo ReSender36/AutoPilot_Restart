@@ -128,4 +128,11 @@ object frmAutoPilotRestart: TfrmAutoPilotRestart
     Left = 288
     Top = 24
   end
+  object timerToCloseEvent: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = timerToCloseEventTimer
+    Left = 200
+    Top = 136
+  end
 end
