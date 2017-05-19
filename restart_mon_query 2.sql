@@ -7,10 +7,21 @@ SELECT l.event_num, se.caption,max(l.tran_date) event_moment
   GROUP BY l.event_num, se.caption
   ORDER BY max(l.tran_date)
 */
-
+/*
   SELECT *
   FROM logs
   WHERE event_num IN(157,158,164,161,162,163,165,166)
+*/
+/*
+SELECT d.IDDOC, COUNT(d.SP2779) 
+  FROM DH465 d
+  WHERE d.SP2779 = 1322112
+  GROUP BY d.IDDOC
+--  HAVING COUNT(d.SP2779) > 1
+  */
+  SELECT *
+  FROM logs
+  WHERE event_num IN(159)
 
 /*
 SELECT *
